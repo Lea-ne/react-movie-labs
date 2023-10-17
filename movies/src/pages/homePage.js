@@ -11,8 +11,6 @@ import Grid from "@mui/material/Grid";
 
 
 
-
-
 const MovieListPage = (props) => {
   const [movies, setMovies] = useState([]);
   const [nameFilter, setNameFilter] = useState("");
@@ -21,6 +19,8 @@ const MovieListPage = (props) => {
 
     const genreId = Number(genreFilter);
 
+
+    //filtering thing, handle change
     let displayedMovies = movies
       .filter((m) => {
         return m.title.toLowerCase().search(nameFilter.toLowerCase()) !== -1;
@@ -28,7 +28,6 @@ const MovieListPage = (props) => {
       .filter((m) => {
         return genreId > 0 ? m.genre_ids.includes(genreId) : true;
       });
-
     const handleChange = (type, value) => {
       if (type === "name") setNameFilter(value);
       else setGenreFilter(value);
@@ -37,20 +36,30 @@ const MovieListPage = (props) => {
 
 
 
+    //add to favorite
+    const addToFavorites = (movieId) => {
+      const updatedMovies = movies.map((m) =>
+        m.id === movieId ? { ...m, favorite: true } : m
+      );
+      setMovies(updatedMovies);
+    };
 
-  useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&include_adult=false&page=1`
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-        return json.results;
-      })
-      .then((movies) => {
-        setMovies(movies);
-      });
-  }, []);
+
+
+    //use effect get movie on the home page form the AP
+      useEffect(() => {
+        fetch(
+          `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&include_adult=false&page=1`
+        )
+          .then((res) => res.json())
+          .then((json) => {
+            console.log(json);
+            return json.results;
+          })
+          .then((movies) => {
+            setMovies(movies);
+          });
+      }, []);
 
 
 
@@ -70,7 +79,7 @@ const MovieListPage = (props) => {
         />
 
         </Grid>
-        <MovieList movies={displayedMovies} />
+        <MovieList movies={displayedMovies} selectFavorite={addToFavorites} />
       </Grid>
     </Grid>
   );
