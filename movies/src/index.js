@@ -9,6 +9,7 @@ import SiteHeader from './components/siteHeader';
 //week7
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
+import MoviesContextProvider from "./contexts/moviesContext";
 
 
 //week 7 qurey
@@ -27,14 +28,16 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <SiteHeader />
+        <MoviesContextProvider>
         <Routes>
-          <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
-          {/* <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} /> */}
-          <Route path="/reviews/:id" element={ <MovieReviewPage /> } />
-          <Route path="/movies/:id" element={<MoviePage />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="*" element={ <Navigate to="/" /> } />
+            <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
+            {/* <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} /> */}
+            <Route path="/reviews/:id" element={ <MovieReviewPage /> } />
+            <Route path="/movies/:id" element={<MoviePage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="*" element={ <Navigate to="/" /> } />
         </Routes>
+        </MoviesContextProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
@@ -43,3 +46,4 @@ const App = () => {
 
 const rootElement = createRoot( document.getElementById("root") )
 rootElement.render(<App />);
+
